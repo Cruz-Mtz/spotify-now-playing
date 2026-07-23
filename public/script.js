@@ -1,279 +1,134 @@
-:root{
+const API = "/api/spotify";
 
---bg:#090909;
+const background = document.getElementById("background");
 
---panel:#111111ee;
+const cover = document.getElementById("cover");
 
---border:#2c2c2c;
+const song = document.getElementById("song");
 
---purple:#8B5CF6;
+const artist = document.getElementById("artist");
 
---text:#F2F2F2;
+const album = document.getElementById("album");
 
---muted:#888;
+const current = document.getElementById("current");
 
-}
+const duration = document.getElementById("duration");
 
-*{
+const bar = document.getElementById("bar");
 
-margin:0;
+const spotify = document.getElementById("spotify");
 
-padding:0;
+const status = document.getElementById("status");
 
-box-sizing:border-box;
+let progress = 0;
+let total = 0;
 
-}
+function format(ms){
 
-body{
+    const minutes = Math.floor(ms / 60000);
 
-font-family:"Rajdhani",sans-serif;
+    const seconds = Math.floor((ms % 60000) / 1000);
 
-background:transparent;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-height:100vh;
-
-overflow:hidden;
-
-position:relative;
+    return `${minutes}:${String(seconds).padStart(2,"0")}`;
 
 }
 
-#background{
+function updateProgress(){
 
-position:fixed;
+    if(total <= 0) return;
 
-inset:0;
+    progress += 1000;
 
-background-position:center;
+    if(progress > total){
 
-background-size:cover;
+        progress = total;
 
-filter:blur(50px) brightness(.22) saturate(150%);
+    }
 
-transform:scale(1.2);
+    bar.style.width = `${progress / total * 100}%`;
 
-transition:.8s;
-
-z-index:-3;
+    current.textContent = format(progress);
 
 }
 
-.noise{
+async function loadSong(){
 
-position:fixed;
+    try{
 
-inset:0;
+        const response = await fetch(API);
 
-opacity:.05;
+        const data = await response.json();
 
-background-image:url("https://grainy-gradients.vercel.app/noise.svg");
+        console.log(data);
 
-pointer-events:none;
+        if(!data.isPlaying){
 
-z-index:-2;
+            status.textContent = "IDLE";
 
-}
+            song.textContent = "Nothing Playing";
 
-.player{
+            artist.textContent = "";
 
-width:820px;
+            album.textContent = "";
 
-background:var(--panel);
+            cover.removeAttribute("src");
 
-backdrop-filter:blur(20px);
+            background.style.backgroundImage = "none";
 
-border:1px solid rgba(255,255,255,.08);
+            bar.style.width = "0%";
 
-box-shadow:
+            current.textContent = "0:00";
 
-0 20px 70px rgba(0,0,0,.65);
+            duration.textContent = "0:00";
 
-border-radius:12px;
+            return;
 
-overflow:hidden;
+        }
 
-}
+        status.textContent = "LIVE";
 
-header{
+        if(cover.src !== data.albumImage){
 
-display:flex;
+            cover.src = data.albumImage;
 
-justify-content:space-between;
+            background.style.backgroundImage = `url(${data.albumImage})`;
 
-align-items:center;
+        }
 
-padding:18px 28px;
+        song.textContent = data.title;
 
-border-bottom:1px solid rgba(255,255,255,.08);
+        artist.textContent = data.artist;
 
-letter-spacing:4px;
+        album.textContent = data.album;
 
-font-size:.8rem;
+        spotify.href = data.songUrl;
 
-}
+        progress = data.progress;
 
-.status{
+        total = data.duration;
 
-display:flex;
+        bar.style.width = `${progress / total * 100}%`;
 
-align-items:center;
+        current.textContent = format(progress);
 
-gap:10px;
+        duration.textContent = format(total);
 
-}
+    }
 
-.dot{
+    catch(error){
 
-width:10px;
+        console.error(error);
 
-height:10px;
+        status.textContent = "ERROR";
 
-border-radius:50%;
+        song.textContent = "Connection Error";
 
-background:#ff3b3b;
-
-box-shadow:0 0 10px #ff3b3b;
+    }
 
 }
 
-.content{
+loadSong();
 
-display:grid;
+setInterval(loadSong,5000);
 
-grid-template-columns:240px 1fr;
-
-gap:35px;
-
-padding:30px;
-
-}
-
-.cover img{
-
-width:100%;
-
-aspect-ratio:1;
-
-object-fit:cover;
-
-border-radius:8px;
-
-box-shadow:0 10px 35px rgba(0,0,0,.45);
-
-}
-
-.label{
-
-display:block;
-
-font-size:.75rem;
-
-letter-spacing:3px;
-
-margin-top:10px;
-
-margin-bottom:6px;
-
-color:var(--purple);
-
-}
-
-#song{
-
-font-size:2.2rem;
-
-margin-bottom:12px;
-
-}
-
-#artist{
-
-font-size:1.5rem;
-
-font-weight:600;
-
-margin-bottom:10px;
-
-}
-
-#album{
-
-color:var(--muted);
-
-font-size:1.1rem;
-
-}
-
-.progress-area{
-
-padding:0 30px 30px;
-
-}
-
-.progress{
-
-height:10px;
-
-background:#242424;
-
-border-radius:999px;
-
-overflow:hidden;
-
-}
-
-#bar{
-
-width:0;
-
-height:100%;
-
-background:linear-gradient(90deg,#8B5CF6,#B695FF);
-
-transition:width .2s linear;
-
-}
-
-.time{
-
-display:flex;
-
-justify-content:space-between;
-
-margin-top:10px;
-
-color:#9c9c9c;
-
-}
-
-#spotify{
-
-display:inline-block;
-
-margin:0 30px 30px;
-
-padding:14px 18px;
-
-text-decoration:none;
-
-color:white;
-
-border:1px solid #8B5CF6;
-
-border-radius:8px;
-
-transition:.25s;
-
-}
-
-#spotify:hover{
-
-background:#8B5CF6;
-
-}
+setInterval(updateProgress,1000);
