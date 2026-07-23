@@ -5,10 +5,14 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CRUZ Widget</title>
+<title>CRUZ Audio Interface</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
 
@@ -16,7 +20,109 @@ content="width=device-width, initial-scale=1.0">
 
 <body>
 
-<h1>CRUZ Widget Loading...</h1>
+<div id="background"></div>
+
+<div class="noise"></div>
+
+<main class="player">
+
+    <header>
+
+        <span class="title">
+            SYSTEM://AUDIO
+        </span>
+
+        <div class="status">
+
+            <span class="dot"></span>
+
+            <span id="status">LIVE</span>
+
+        </div>
+
+    </header>
+
+    <section class="content">
+
+        <div class="cover">
+
+            <img
+                id="cover"
+                alt="Album Cover">
+
+        </div>
+
+        <div class="info">
+
+            <span class="label">
+                TRACK
+            </span>
+
+            <h1 id="song">
+
+                Loading...
+
+            </h1>
+
+            <span class="label">
+
+                ARTIST
+
+            </span>
+
+            <h2 id="artist"></h2>
+
+            <span class="label">
+
+                ALBUM
+
+            </span>
+
+            <p id="album"></p>
+
+        </div>
+
+    </section>
+
+    <section class="progress-area">
+
+        <div class="progress">
+
+            <div id="bar"></div>
+
+        </div>
+
+        <div class="time">
+
+            <span id="current">
+
+                0:00
+
+            </span>
+
+            <span id="duration">
+
+                0:00
+
+            </span>
+
+        </div>
+
+    </section>
+
+    <a
+
+        id="spotify"
+
+        target="_blank"
+
+    >
+
+        OPEN IN SPOTIFY ↗
+
+    </a>
+
+</main>
 
 <script src="script.js"></script>
 
