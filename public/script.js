@@ -3,12 +3,11 @@ const API = "/api/spotify";
 const cover = document.getElementById("cover");
 const song = document.getElementById("song");
 const artist = document.getElementById("artist");
-const album = document.getElementById("album"); // Restaurado
+const album = document.getElementById("album");
 const current = document.getElementById("current");
 const duration = document.getElementById("duration");
 const bar = document.getElementById("bar");
 const spotify = document.getElementById("spotify");
-const status = document.getElementById("status");
 
 let progress = 0;
 let total = 0;
@@ -35,18 +34,18 @@ async function loadSong() {
         const data = await response.json();
 
         if (!data.isPlaying) {
-            status.textContent = "IDLE";
             song.textContent = "Nothing Playing";
             artist.textContent = "";
             album.textContent = "";
-            cover.removeAttribute("src");
+            cover.style.display = "none"; // Oculta el icono de imagen rota si no hay canción
             bar.style.width = "0%";
             current.textContent = "0:00";
             duration.textContent = "0:00";
+            spotify.removeAttribute("href");
             return;
         }
 
-        status.textContent = "LIVE";
+        cover.style.display = "block"; // Muestra la portada si está reproduciendo
 
         if (cover.src !== data.albumImage) {
             cover.src = data.albumImage;
@@ -54,7 +53,7 @@ async function loadSong() {
 
         song.textContent = data.title;
         artist.textContent = data.artist;
-        album.textContent = data.album; // Restaurado
+        album.textContent = data.album;
         spotify.href = data.songUrl;
 
         progress = data.progress;
@@ -66,7 +65,6 @@ async function loadSong() {
 
     } catch (error) {
         console.error(error);
-        status.textContent = "ERROR";
         song.textContent = "Connection Error";
     }
 }
