@@ -1,7 +1,7 @@
 :root {
-    --panel: #111111ee;
     --purple: #8B5CF6;
     --muted: #888;
+    --text: #F4F4F4;
 }
 
 * {
@@ -10,92 +10,56 @@
     box-sizing: border-box;
 }
 
-/* El body se convierte en el contenedor espía */
 body {
     font-family: "Rajdhani", sans-serif;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     background: transparent;
+    color: var(--text);
     container-type: size;
     container-name: widget;
 }
 
-a#spotify {
-    text-decoration: none;
-    color: #F2F2F2;
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.player {
+.player-content-only {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: var(--panel);
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 18px;
-    font-size: 0.8rem;
-    letter-spacing: 4px;
-    z-index: 10;
-}
-
-.status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #ff3b3b;
-    box-shadow: 0 0 8px #ff3b3b;
 }
 
 .content {
     flex: 1;
     display: flex;
     overflow: hidden;
-    position: relative;
-    padding: 0 15px;
+    padding: 15px;
+    gap: 15px;
 }
 
 #cover {
     border-radius: 8px;
     object-fit: cover;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    transition: all 0.3s ease;
+    width: 80px;
+    height: 80px;
 }
 
 .info {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    z-index: 2;
 }
 
 .label {
     font-size: 0.65rem;
     letter-spacing: 2px;
     color: var(--purple);
-    margin: 6px 0 2px;
+    margin: 4px 0 0;
     text-transform: uppercase;
 }
 
 #song {
     font-size: 1.3rem;
-    margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -119,9 +83,9 @@ header {
 }
 
 .progress-area {
-    padding: 15px;
-    z-index: 10;
-    background: transparent;
+    padding: 0 15px 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .progress {
@@ -146,67 +110,47 @@ header {
     font-size: 0.75rem;
 }
 
-/* --------------------------------------------------- */
-/*  AQUÍ ESTÁ LA MAGIA DE LA VENTANA AJUSTABLE         */
-/* --------------------------------------------------- */
-
-/* 1. MODO BARRA HORIZONTAL (Cuando la ventana es bajita) */
-@container widget (max-height: 250px) {
-    .content {
-        flex-direction: row;
-        align-items: center;
-        gap: 15px;
-    }
-    #cover {
-        height: 80%;
-        max-height: 80px;
-        aspect-ratio: 1;
-    }
-    .label.album-label, #album {
-        display: none; /* Ocultamos el álbum para que no estorbe */
-    }
+.spotify-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--purple);
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    transition: .25s;
 }
 
-/* 2. MODO TARJETA VERTICAL (Cuando es alta pero angosta) */
-@container widget (min-height: 251px) and (max-width: 450px) {
+.spotify-button:hover {
+    background: var(--purple);
+    box-shadow: 0 0 15px rgba(139, 92, 246, .45);
+}
+
+/* 1. MODO BARRA HORIZONTAL (Oculta botón y álbum) */
+@container widget (max-height: 200px) {
+    #cover { width: 60px; height: 60px; }
+    .label.album-label, #album, .spotify-button { display: none; }
+}
+
+/* 2. MODO TARJETA VERTICAL */
+@container widget (min-height: 201px) and (max-width: 400px) {
     .content {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 10px;
-        padding-top: 10px;
     }
-    #cover {
-        width: 60%;
-        max-width: 180px;
-        aspect-ratio: 1;
-    }
+    #cover { width: 140px; height: 140px; }
 }
 
-/* 3. MODO CUADRADO GRANDE (Cuando hay mucho espacio en ambos lados) */
-@container widget (min-height: 251px) and (min-width: 451px) {
-    .content {
-        justify-content: center;
-        align-items: center;
-    }
+/* 3. MODO GRANDE */
+@container widget (min-height: 201px) and (min-width: 401px) {
+    .content { justify-content: center; align-items: center; }
     #cover {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0.2; /* El cover se vuelve fondo estilo póster */
-        border-radius: 0;
-        object-fit: contain;
-    }
-    .info {
-        position: absolute;
-        bottom: 10px;
-        left: 15px;
-        background: rgba(17, 17, 17, 0.85);
-        backdrop-filter: blur(10px);
-        padding: 12px 18px;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.1);
-        max-width: 80%;
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        opacity: 0.2; border-radius: 0; object-fit: contain; z-index: -1;
     }
 }
