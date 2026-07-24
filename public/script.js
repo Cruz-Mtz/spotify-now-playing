@@ -3,6 +3,7 @@ const API = "/api/spotify";
 const cover = document.getElementById("cover");
 const song = document.getElementById("song");
 const artist = document.getElementById("artist");
+const album = document.getElementById("album"); // Restaurado
 const current = document.getElementById("current");
 const duration = document.getElementById("duration");
 const bar = document.getElementById("bar");
@@ -37,6 +38,7 @@ async function loadSong() {
             status.textContent = "IDLE";
             song.textContent = "Nothing Playing";
             artist.textContent = "";
+            album.textContent = "";
             cover.removeAttribute("src");
             bar.style.width = "0%";
             current.textContent = "0:00";
@@ -52,6 +54,7 @@ async function loadSong() {
 
         song.textContent = data.title;
         artist.textContent = data.artist;
+        album.textContent = data.album; // Restaurado
         spotify.href = data.songUrl;
 
         progress = data.progress;
