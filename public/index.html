@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Todo el widget ahora es un link clickeable hacia la canción -->
     <a id="spotify" target="_blank" href="#">
         <main class="player">
             <header>
@@ -23,9 +22,16 @@
 
             <section class="content">
                 <img id="cover" alt="Album Cover">
+                
                 <div class="info">
+                    <span class="label track-label">TRACK</span>
                     <h1 id="song">Loading...</h1>
+                    
+                    <span class="label artist-label">ARTIST</span>
                     <h2 id="artist"></h2>
+                    
+                    <span class="label album-label">ALBUM</span>
+                    <p id="album"></p>
                 </div>
             </section>
 
